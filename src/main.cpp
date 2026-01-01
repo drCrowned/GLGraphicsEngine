@@ -13,7 +13,8 @@
 #include "TextureClass.h"
 #include "CameraClass.h"
 
-int main() {
+int main()
+{
 
 	// Initialize GLFW
 	glfwInit();
@@ -32,13 +33,48 @@ int main() {
 	// Format: x, y, z, r, g, b, u, v
 	// Layout: 3 position floats, 3 color floats, 2 UV floats (Texture Coordinates) (total 8 floats per vertex)
 	GLfloat vertices[] = {
-		-0.5f,  0.0f,  0.5f,  0.83f, 0.70f, 0.44f,  0.0f, 0.0f,
-		-0.5f,  0.0f, -0.5f,  0.83f, 0.70f, 0.44f,  5.0f, 0.0f,
+		-0.5f,
+		0.0f,
+		0.5f,
+		0.83f,
+		0.70f,
+		0.44f,
+		0.0f,
+		0.0f,
+		-0.5f,
+		0.0f,
+		-0.5f,
+		0.83f,
+		0.70f,
+		0.44f,
+		5.0f,
+		0.0f,
 
-		 0.5f,  0.0f, -0.5f, 0.83f, 0.70f, 0.44f,  0.0f, 0.0f,
-		 0.5f,  0.0f,  0.5f,  0.83f, 0.70f, 0.44f,  5.0f, 0.0f,
-		
-		 0.0f,  0.8f,  0.0f,  0.92f, 0.86f, 0.76f,  2.5f, 5.0f,
+		0.5f,
+		0.0f,
+		-0.5f,
+		0.83f,
+		0.70f,
+		0.44f,
+		0.0f,
+		0.0f,
+		0.5f,
+		0.0f,
+		0.5f,
+		0.83f,
+		0.70f,
+		0.44f,
+		5.0f,
+		0.0f,
+
+		0.0f,
+		0.8f,
+		0.0f,
+		0.92f,
+		0.86f,
+		0.76f,
+		2.5f,
+		5.0f,
 	};
 
 	// Indices for vertices order
@@ -49,14 +85,14 @@ int main() {
 		0, 1, 4,
 		1, 2, 4,
 		2, 3, 4,
-		3, 0, 4
-	};
+		3, 0, 4};
 
 	// Create a windowed mode window (Res, Title, Monitor <if we want fullscreen or smt>, Share <idk what that is yet>)
-	GLFWwindow* window = glfwCreateWindow(800, 800, "OpenGL Window", NULL, NULL);
+	GLFWwindow *window = glfwCreateWindow(800, 800, "OpenGL Window", NULL, NULL);
 
 	// Check if the window was created successfully, if not, terminate GLFW
-	if (window == nullptr) {
+	if (window == nullptr)
+	{
 		std::cerr << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 		return -1;
@@ -72,10 +108,10 @@ int main() {
 	int fbWidth, fbHeight;
 	glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
 	glViewport(0, 0, fbWidth, fbHeight); // Set viewport to match the framebuffer size (handles high-DPI displays)
-	
-	// Creates a SHader object using the default vertex and fragment shaders
+
+	// Creates a Shader object using the default vertex and fragment shaders
 	// The Shader class compiles and links the given shader files and exposes the program ID
-	Shader shaderProgram("default.vert", "default.frag");
+	Shader shaderProgram("shaders/default.vert", "shaders/default.frag");
 
 	// Generates the Vertex Array Object and binds it
 	// VAO encapsulates vertex attribute state (bindings, formats)
@@ -91,10 +127,10 @@ int main() {
 	// Attribute 0: position (3 floats) at offset 0
 	// Attribute 1: color    (3 floats) at offset 3*sizeof(float)
 	// Attribute 2: UV       (2 floats) at offset 6*sizeof(float)
-	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
-	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	
+	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void *)0);
+	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void *)(3 * sizeof(float)));
+	VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, 8 * sizeof(float), (void *)(6 * sizeof(float)));
+
 	// Unbind all to prevent accidentally modifying them
 	VAO1.Unbind();
 	VBO1.Unbind();
@@ -105,7 +141,7 @@ int main() {
 	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
 
 	// Texture
-	Texture temptexture("tao.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	Texture temptexture("textures/tao.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 	temptexture.texUnit(shaderProgram, "tex0", 0);
 
 	// Enables the Depth Buffer
@@ -115,7 +151,8 @@ int main() {
 	Camera camera(fbWidth, fbHeight, glm::vec3(0.0f, 0.0f, 2.0f));
 
 	// Main loop
-	while (!glfwWindowShouldClose(window)) {
+	while (!glfwWindowShouldClose(window))
+	{
 		// Specify the color of the background
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 
@@ -126,7 +163,7 @@ int main() {
 		shaderProgram.Activate();
 
 		camera.Inputs(window);
-		
+
 		// Updates and exports the camera matrix to the Vertex Shader
 		camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "cameraMatrix");
 
@@ -138,7 +175,7 @@ int main() {
 
 		// Draw the triangle using the GL_TRIANGLES primitive
 		// Using glDrawElements leverages the EBO to reuse vertices
-		glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(int), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window);
 
 		// Poll for and process events (if this is not here, the window will freeze and windows will say that its not responding)

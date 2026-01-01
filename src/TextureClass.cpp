@@ -1,17 +1,18 @@
 #include "TextureClass.h"
 
-Texture::Texture(const char* image, GLenum texType, GLenum slot, GLenum format, GLenum pixelType) {
+Texture::Texture(const char *image, GLenum texType, GLenum slot, GLenum format, GLenum pixelType)
+{
 	// Set texture type
 	type = texType;
 
 	// Load image
 	int widthImg, heightImg, numColCh;
 	stbi_set_flip_vertically_on_load(true); // Flip image on y-axis
-	unsigned char* bytes = stbi_load(image, &widthImg, &heightImg, &numColCh, STBI_rgb_alpha);
-	if (!bytes) {
+	unsigned char *bytes = stbi_load(image, &widthImg, &heightImg, &numColCh, STBI_rgb_alpha);
+	if (!bytes)
+	{
 		std::cerr << "Failed to load texture: " << image << std::endl;
 	}
-
 
 	// Generate texture
 	glGenTextures(1, &ID);
@@ -44,23 +45,27 @@ Texture::Texture(const char* image, GLenum texType, GLenum slot, GLenum format, 
 }
 
 // Assigns a texture unit to a uniform sampler
-void Texture::texUnit(Shader& shader, const char* uniform, GLuint unit) {
+void Texture::texUnit(Shader &shader, const char *uniform, GLuint unit)
+{
 	GLuint texUni = glGetUniformLocation(shader.ID, uniform);
 	shader.Activate();
 	glUniform1i(texUni, unit);
 }
 
 // Binds the texture
-void Texture::Bind() {
+void Texture::Bind()
+{
 	glBindTexture(type, ID);
 }
 
 // Unbinds the texture
-void Texture::Unbind() {
+void Texture::Unbind()
+{
 	glBindTexture(type, 0);
 }
 
 // Deletes the texture
-void Texture::Delete() {
+void Texture::Delete()
+{
 	glDeleteTextures(1, &ID);
 }
